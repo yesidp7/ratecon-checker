@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate Con Checker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 16px;
+      background-color: #f5f5f5;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      color: #222;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+
+    pre {
+      background-color: white;
+      padding: 12px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Rate Con Checker</h1>
+  <p>Revisa tu rate confirmation antes de firmar.</p>
+
+  <input type="file" id="inputPdf" accept="application/pdf">
+  <button id="botonCopiar">Copiar texto</button>
+
+  <pre id="resultado"></pre>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+    const inputPdf = document.getElementById("inputPdf");
+    const resultado = document.getElementById("resultado");
+    const botonCopiar = document.getElementById("botonCopiar");
+
+    function limpiarTexto(texto) {
+      return texto
+        .replace(/[ \t]+/g, " ")   // varios espacios seguidos -> uno solo
+        .replace(/\n{2,}/g, "\n")  // varias líneas vacías -> una sola
+        .trim();
+    }
+
+    inputPdf.addEventListener("change", async function () {
+      const archivo = inputPdf.files[0];
+      const datos = await archivo.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument(datos).promise;
+
+      let textoCompleto = "";
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const pagina = await pdf.getPage(i);
+        const contenido = await pagina.getTextContent();
+        const textoPagina = contenido.items.map(item => item.str).join(" ");
+        textoCompleto += textoPagina + "\n";
+      }
+
+      resultado.textContent = limpiarTexto(textoCompleto);
+    });
+
+    botonCopiar.addEventListener("click", function () {
+      navigator.clipboard.writeText(resultado.textContent);
+      botonCopiar.textContent = "¡Copiado!";
+      setTimeout(() => { botonCopiar.textContent = "Copiar texto"; }, 1500);
+    });
+  </script>
+
+</body>
+</html>
