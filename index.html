@@ -3,53 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rate Con Checker</title>
+  <title>RateConf Checker</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 16px;
-      background-color: #f5f5f5;
-    }
-
-    h1 {
-      font-size: 1.4rem;
-      color: #222;
-    }
-
-    input, button {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-
-    button {
-      background-color: #2e7d32;
-      color: white;
-      border: none;
-      border-radius: 6px;
-    }
-
-    pre {
-      background-color: white;
-      padding: 12px;
-      border-radius: 6px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-size: 0.9rem;
-    }
-  </style>
+  :root {
+  --fondo: #0a0f0b;
+  --tarjeta: #121a14;
+  --borde: #1f2d22;
+  --verde: #22c55e;
+  --texto: #e6ede8;
+  --gris: #8a9a8e;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0 auto;
+  padding: 24px 16px;
+  max-width: 640px;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+}
+.marca { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.logo {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--verde); color: var(--fondo);
+  display: grid; place-items: center;
+  font-family: monospace; font-weight: 800; font-size: 18px;
+}
+h1 { margin: 0; font-size: 1.3rem; }
+.sub-marca { color: var(--gris); font-size: 0.85rem; }
+.tarjeta {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.tarjeta p { margin: 0; font-weight: 600; }
+input[type="file"] { color: var(--gris); }
+input[type="file"]::file-selector-button {
+  background: transparent; color: var(--verde);
+  border: 1px solid var(--verde); border-radius: 8px;
+  padding: 10px 14px; margin-right: 10px; cursor: pointer;
+}
+button {
+  background: var(--verde); color: var(--fondo);
+  border: none; border-radius: 10px; padding: 14px;
+  font-size: 1rem; font-weight: 700; cursor: pointer;
+}
+button:active { transform: scale(0.98); }
+summary { color: var(--gris); cursor: pointer; }
+pre {
+  background: #0d130f; color: var(--texto);
+  border: 1px solid var(--borde); border-radius: 8px;
+  padding: 12px; font-size: 0.85rem;
+  white-space: pre-wrap; word-wrap: break-word;
+  max-height: 50vh; overflow: auto;
+}
+footer { text-align: center; color: var(--gris); font-size: 0.8rem; margin-top: 24px; }
+</style>
 </head>
 <body>
 
-  <h1>Rate Con Checker</h1>
-  <p>Revisa tu rate confirmation antes de firmar.</p>
+  <header class="marca">
+  <div class="logo">YT</div>
+  <div>
+    <h1>RateConf Checker</h1>
+    <span class="sub-marca">by Yesid Tech Solutions</span>
+  </div>
+</header>
 
+<main class="tarjeta">
+  <p>Revisa tu Rate Confirmation:</p>
   <input type="file" id="inputPdf" accept="application/pdf">
   <button id="botonCopiar">Copiar texto</button>
+  <details>
+    <summary>Ver texto extraído</summary>
+    <pre id="resultado"></pre>
+  </details>
+</main>
 
-  <pre id="resultado"></pre>
+<footer>© 2026 Yesid Tech Solutions</footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
